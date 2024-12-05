@@ -241,7 +241,7 @@ int main()
 
     do
     {
-        // system("cls");
+        system("cls");
         header();
         setColor(14);
         cout << endl;
@@ -328,12 +328,16 @@ int main()
 
             for (int k = 0; k < MAX_AddSIZE; k++)
             {
-                if (accountsAssign[k].userName == user && accountsAssign[k].password == pwd && accountsAssign[k].accountFlag == true)
+                if (accountsAssign[k].userName == user && accountsAssign[k].password == pwd)
                 {
+                    accountsAssign[k].accountFlag = true;
+                    if (accountsAssign[k].accountFlag == true)
+                    {
 
-                    loggedInUserType = 3;
-                    ispresent = false;
-                    break;
+                        loggedInUserType = 3;
+                        ispresent = false;
+                        break;
+                    }
                 }
             }
             if (ispresent)
@@ -526,19 +530,22 @@ int main()
                             // --------------Function call for Creating accounts -----------
 
                             CreatAccount(accountsAssign, assignRoom, uCounter, addCounter, Rcounter, UpdateAccount, MAX_AddSIZE);
-
+                            Sleep(1000);
+                            system("cls");
                             break;
                         case 2:
                             cout << endl;
                             // --------------Function call for Deleting accounts -----------
                             deleteAccount(accountsAssign, assignRoom, addStudent, MAX_AddSIZE, removeAccount, uCounter, addCounter, Rcounter);
-
+                            Sleep(1000);
+                            system("cls");
                             break;
                         case 3:
                             cout << endl;
                             // --------------Function call for updating accounts -----------
                             updateAccount(accountsAssign, assignRoom, UpdateAccount, uCounter, addCounter, MAX_AddSIZE, Rcounter);
-
+                            Sleep(1000);
+                            system("cls");
                             break;
 
                         case 0:
@@ -799,13 +806,14 @@ int main()
                     // --------------Function call for Applicants can apply for Hostel-----------
 
                     applyHostelApplication(applyStudent, apCounter, MAX_ApplySize);
-
+                    Sleep(1000);
+                    system("cls");
                     break;
                 case 3:
                     // --------------Function call for view Hostelite Applications -----------
 
                     viewHosteliteApplications(applyStudent, apCounter, MAX_ApplySize);
-                    Sleep(2000);
+                    Sleep(1000);
 
                     break;
 
@@ -897,7 +905,8 @@ int main()
                     cout << endl;
                     // --------------Function call forHostelilte can pay their dues-----------
                     payDues(accountsAssign, assignRoom, duesOfstudent, payment, addStudent, pwd, user, addCounter, MAX_AddSIZE);
-
+                    Sleep(1000);
+                    system("cls");
                     break;
 
                 case 0:
@@ -1204,6 +1213,7 @@ void addRecord(student addStudent[], int &addCounter, int &MAX_AddSIZE, int apCo
             }
             addStudent[i].flag = true; // Administrator add the record
             isadded = true;
+            cout << "\t\t\t\t\t\t\tStudent added successfully" << endl;
         }
 
         addCounter++;
@@ -1480,6 +1490,8 @@ void RoomAssign(rooms assignRoom[], student addStudent[], student applyStudent[]
                 }
                 if (isOccured)
                 {
+                    cout << "\t\t\t\t\t\tRoom assign successfully!!" << endl;
+
                     break;
                 }
                 else
@@ -1555,6 +1567,8 @@ void loadData(rooms assignRoom[], student addStudent[], int MAX_AddSIZE, dues du
 
         assignRoom[i].roomFlag = true;
         addStudent[i].flag = true;
+        duesOfstudent[i].assignDues = true;
+
         i++;
     }
 
@@ -1565,6 +1579,8 @@ void loadData(rooms assignRoom[], student addStudent[], int MAX_AddSIZE, dues du
 void saveCurrentRecordList(rooms assignRoom[], student addStudent[], dues duesOfstudent[], int addCounter, int MAX_AddSIZE)
 {
     ofstream currentRlist;
+    int count = 0;
+
     currentRlist.open("CurrentRecord.txt");
     if (!currentRlist)
     {
@@ -1575,10 +1591,21 @@ void saveCurrentRecordList(rooms assignRoom[], student addStudent[], dues duesOf
     {
         if (addStudent[j].name != "nv") // check if hosteelite rocord is added then display its record
         {
-            currentRlist << assignRoom[j].achieveRoom << "," << addStudent[j].name << ","
-                         << addStudent[j].fatherName << "," << addStudent[j].marks
-                         << "," << addStudent[j].CNIC << ","
-                         << addStudent[j].phoneNo << "," << duesOfstudent[j].HosteliteDues << endl;
+            if (count == addCounter - 1)
+            {
+                currentRlist << assignRoom[j].achieveRoom << "," << addStudent[j].name << ","
+                             << addStudent[j].fatherName << "," << addStudent[j].marks
+                             << "," << addStudent[j].CNIC << ","
+                             << addStudent[j].phoneNo << "," << duesOfstudent[j].HosteliteDues;
+            }
+            else
+            {
+                currentRlist << assignRoom[j].achieveRoom << "," << addStudent[j].name << ","
+                             << addStudent[j].fatherName << "," << addStudent[j].marks
+                             << "," << addStudent[j].CNIC << ","
+                             << addStudent[j].phoneNo << "," << duesOfstudent[j].HosteliteDues << endl;
+                count++;
+            }
         }
     }
     currentRlist.close();
@@ -1601,7 +1628,6 @@ void updateRecord(student addStudent[], int addCounter, rooms assignRoom[], int 
         while (true)
         {
 
-            // cout << "Assign the room to Hostelite: ";
             cin >> editRecord;
             if (cin.fail()) // input validation
             {
@@ -1870,12 +1896,12 @@ void deleteAccount(accounts accountsAssign[], rooms assignRoom[], student addStu
 
         if (Rcounter == 0)
         {
-            cout << "\t\t\t\t\t\t\tEnter the Room number to Delete account: ";
+            cout << "\t\t\t\t\t\t\tKindly assign the room  before Deleting  Account!! " << endl;
+            return;
         }
         else
         {
-            cout << "Kindly assign the room  before Deleting  Account!! " << endl;
-            return;
+            cout << "\t\t\t\t\t\t\tEnter the Room number to Delete account: ";
         }
         cin >> removeAccount;
 
@@ -1908,20 +1934,19 @@ void deleteAccount(accounts accountsAssign[], rooms assignRoom[], student addStu
             cout << "\t\t\t\t\t\t\tAccount deleted successfully!........." << endl;
             break;
         }
-        else
+    }
+
+    if (!isDelateAccount)
+    {
         {
             cout << " \t\t\t\t\t\t\tThe Account of this Room no is not Exist !!" << endl;
             return;
         }
     }
-
-    if (!isDelateAccount)
+    if (addCounter == 0)
     {
-        if (addCounter == 0)
-        {
-            cout << "\t\t\t\t\t\t\tKindly add the applicant record before Deleting Account!! " << endl;
-            return;
-        }
+        cout << "\t\t\t\t\t\t\tKindly add the applicant record before Deleting Account!! " << endl;
+        return;
     }
 }
 
@@ -1929,6 +1954,8 @@ void deleteAccount(accounts accountsAssign[], rooms assignRoom[], student addStu
 
 void updateAccount(accounts accountsAssign[], rooms assignRoom[], int UpdateAccount, int &uCounter, int addCounter, int &MAX_AddSIZE, int Rcounter)
 {
+    bool isUpadteAccount = true;
+
     if (addCounter == 0)
     {
         cout << "\t\t\t\t\t\t\tKindly add the applicant record before Update Account!! " << endl;
@@ -1974,13 +2001,19 @@ void updateAccount(accounts accountsAssign[], rooms assignRoom[], int UpdateAcco
             cin >> accountsAssign[i].userName;
             cout << "\t\t\t\t\t\t\tEnter new Password : ";
             cin >> accountsAssign[i].password;
+            isUpadteAccount = false;
             break;
         }
-        else
-        {
-            cout << " \t\t\t\t\t\t\tThe Account of this Room no is not Exist !!" << endl;
-            return;
-        }
+    }
+    if (isUpadteAccount)
+    {
+        cout << " \t\t\t\t\t\t\tThe Account of this Room no is not Exist !!" << endl;
+        return;
+    }
+    if (addCounter == 0)
+    {
+        cout << "Kindly add the applicant record before Update Account!! " << endl;
+        return;
     }
 }
 
@@ -2016,6 +2049,7 @@ void veiwStatus(accounts accountsAssign[], rooms assignRoom[], student addStuden
 
 void payDues(accounts accountsAssign[], rooms assignRoom[], dues duesOfstudent[], double payment, student addStudent[], string pwd, string user, int addCounter, int &MAX_AddSIZE)
 {
+    bool submitt = false;
 
     for (int j = 0; j < MAX_AddSIZE; j++)
     {
@@ -2030,6 +2064,7 @@ void payDues(accounts accountsAssign[], rooms assignRoom[], dues duesOfstudent[]
                 if (duesOfstudent[j].HosteliteDues == 0)
                 {
                     cout << "\t\t\t\t\t\t\tYou have no pending dues .Thank you!!!" << endl;
+                    Sleep(1000);
                     return;
                 }
                 cout << "\t\t\t\t\t\t\t\tKindly enter your dues : ";
@@ -2059,6 +2094,7 @@ void payDues(accounts accountsAssign[], rooms assignRoom[], dues duesOfstudent[]
 
                 duesOfstudent[j].HosteliteDues -= payment; // generating the remaining dues
                 duesOfstudent[j].duesFlag = true;
+                submitt = true;
 
                 cout << "\t\t\t\t\t\t\t\t\tPayment successful! You have paid " << payment << endl;
                 cout << "\t\t\t\t\t\t\t\t\tRemaining dues: " << duesOfstudent[j].HosteliteDues << endl;
@@ -2067,9 +2103,8 @@ void payDues(accounts accountsAssign[], rooms assignRoom[], dues duesOfstudent[]
                 break;
             }
         }
-        else
+        if (submitt)
         {
-            cout << "\t\t\t\t\t\t\tSeneior wardon does not assign the dues.";
             break;
         }
     }
@@ -2084,13 +2119,23 @@ void applylistDataRecord(student applyStudent[], int apCounter, int MAX_ApplySiz
         cout << "File does not exits!";
         return;
     }
+    int saved = 0;
 
     for (int j = 0; j < MAX_ApplySize; j++)
     {
         if (applyStudent[j].name != "nv" && applyStudent[j].fatherName != "nv" && applyStudent[j].marks != 0 && applyStudent[j].CNIC != "nv" && applyStudent[j].phoneNo != "nv") // Display only valid   entries
         {
-            applyListData << applyStudent[j].name << "," << applyStudent[j].fatherName << "," << applyStudent[j].marks
-                          << "," << applyStudent[j].CNIC << "," << applyStudent[j].phoneNo << endl;
+            if (saved == apCounter - 1)
+            {
+                applyListData << applyStudent[j].name << "," << applyStudent[j].fatherName << "," << applyStudent[j].marks
+                              << "," << applyStudent[j].CNIC << "," << applyStudent[j].phoneNo;
+            }
+            else
+            {
+                applyListData << applyStudent[j].name << "," << applyStudent[j].fatherName << "," << applyStudent[j].marks
+                              << "," << applyStudent[j].CNIC << "," << applyStudent[j].phoneNo << endl;
+                saved++;
+            }
         }
     }
     applyListData.close();
@@ -2116,7 +2161,7 @@ void loadapplylistDataRecord(student applyStudent[], int &apCounter, int MAX_App
         applyListDataIn.ignore();
         getline(applyListDataIn, applyStudent[i].CNIC, ',');
 
-        getline(applyListDataIn, applyStudent[i].phoneNo, ',');
+        getline(applyListDataIn, applyStudent[i].phoneNo, '\n');
         applyStudent[i].flag = true;
         i++;
     }
@@ -2128,6 +2173,8 @@ void loadapplylistDataRecord(student applyStudent[], int &apCounter, int MAX_App
 void saveAccountsRecord(accounts accountsAssign[], complains stComplain[], int MAX_AddSIZE, int uCounter, int cmpCounter)
 {
     ofstream accountsOut;
+    int temped = 0;
+
     accountsOut.open("account.txt");
 
     if (!accountsOut)
@@ -2137,9 +2184,18 @@ void saveAccountsRecord(accounts accountsAssign[], complains stComplain[], int M
     }
     for (int i = 0; i < MAX_AddSIZE; i++)
     {
-        if (accountsAssign[i].userName != "nv" && accountsAssign[i].password != "nv" && stComplain[i].complain != "nv")
+        if (accountsAssign[i].userName != "nv" && accountsAssign[i].password != "nv" && accountsAssign[i].accountFlag != false)
         {
-            accountsOut << accountsAssign[i].userName << "," << accountsAssign[i].password << "," << stComplain[i].complain << endl;
+
+            if (temped == uCounter - 1)
+            {
+                accountsOut << accountsAssign[i].userName << "," << accountsAssign[i].password << "," << stComplain[i].complain;
+            }
+            else
+            {
+                accountsOut << accountsAssign[i].userName << "," << accountsAssign[i].password << "," << stComplain[i].complain << endl;
+                temped++;
+            }
         }
     }
     accountsOut.close();
@@ -2162,7 +2218,7 @@ void loadAccountsRecord(accounts accountsAssign[], complains stComplain[], int M
 
         getline(accountsIn, accountsAssign[i].userName, ',');
         getline(accountsIn, accountsAssign[i].password, ',');
-        getline(accountsIn, stComplain[i].complain, ',');
+        getline(accountsIn, stComplain[i].complain, '\n');
 
         accountsAssign[i].accountFlag = true;
         stComplain[i].cmpFlag = true;
